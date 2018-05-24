@@ -25,7 +25,7 @@ public class PrioQ {
         public int compare(Object o1, Object o2) {
             Pair<Double, Point> p1 = (Pair<Double, Point>) o1;
             Pair<Double, Point> p2 = (Pair<Double, Point>) o2;
-            if(p1.getKey() > p2.getKey())
+            if(p1.getKey() < p2.getKey())
                 return 1;
             else return -1;
         }
