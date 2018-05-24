@@ -13,6 +13,8 @@ public class Node {
     double dataset[][];
     Point datapoint;
     Node left, right;
+    int keyIndex;
+    double median;
 
     public Node(double[][] inputdata) {
         dataset = inputdata;
@@ -21,22 +23,21 @@ public class Node {
         }
         //get highest variance feature index
         double highestVariance = 0;
-        int highestVarianceColumnnr = 0;
         for (int i = 0; i < dataset[0].length; i++) {
             double tmpVariance = Util.variance(Util.getColumn(dataset, i));
             if (tmpVariance > highestVariance) {
                 highestVariance = tmpVariance;
-                highestVarianceColumnnr = i;
+                keyIndex = i;
             }
         }
         //calculate median
-        double median = Util.median(Util.getColumn(dataset, highestVarianceColumnnr));
+        median = Util.median(Util.getColumn(dataset, keyIndex));
         
         //split list
         List<double[]> l = new ArrayList<>();
         List<double[]> r = new ArrayList<>();
         for (double[] dataset1 : dataset) {
-            if (dataset1[highestVarianceColumnnr] < median) {
+            if (dataset1[keyIndex] < median) {
                 l.add(dataset1);
             } else {
                 r.add(dataset1);
