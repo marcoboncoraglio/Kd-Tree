@@ -24,7 +24,6 @@ public class Node {
         dataset = inputdata;
         if (inputdata.length == 1) {
             datapoint = new Point(dataset[0]);
-            System.out.println("End");
         }
         //get highest variance feature index
         double highestVariance = 0;
