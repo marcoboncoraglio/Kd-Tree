@@ -41,7 +41,7 @@ public class Util {
     }
 
     public static double[] getColumn(double[][] array, int index) {
-        double[] column = new double[array[0].length];
+        double[] column = new double[array.length];
         for (int i = 0; i < column.length; i++) {
             column[i] = array[i][index];
         }

@@ -40,7 +40,7 @@ public class Node {
         median = Util.median(Util.getColumn(dataset, keyIndex));
         datapoint = new Point(inputdata[median.getKey()]);
         System.out.println("Median: " + median.getValue());
-        System.out.println(datapoint);
+        //System.out.println(datapoint);
 
         //split list
         List<double[]> l = new ArrayList<>();
