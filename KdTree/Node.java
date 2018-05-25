@@ -3,6 +3,7 @@ package KdTree;
 import Util.Util;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 
 /**
  *
@@ -14,12 +15,16 @@ public class Node {
     Point datapoint;
     Node left, right;
     int keyIndex;
-    double median;
+    Pair<Integer, Double> median;
+
+    static int nodeCount = 0;
 
     public Node(double[][] inputdata) {
+        System.out.println(nodeCount++);
         dataset = inputdata;
         if (inputdata.length == 1) {
             datapoint = new Point(dataset[0]);
+            System.out.println("End");
         }
         //get highest variance feature index
         double highestVariance = 0;
@@ -31,22 +36,39 @@ public class Node {
             }
         }
         //calculate median
+        System.out.println("Highest Variance index: " + keyIndex);
         median = Util.median(Util.getColumn(dataset, keyIndex));
-        
+        datapoint = new Point(inputdata[median.getKey()]);
+        System.out.println("Median: " + median.getValue());
+        System.out.println(datapoint);
+
         //split list
         List<double[]> l = new ArrayList<>();
         List<double[]> r = new ArrayList<>();
         for (double[] dataset1 : dataset) {
-            if (dataset1[keyIndex] < median) {
+            if(dataset1 == datapoint.getArray())
+                continue;
+            if (dataset1[keyIndex] < median.getValue()) {
                 l.add(dataset1);
             } else {
                 r.add(dataset1);
             }
         }
+
+        System.out.println("Left list size: " + l.size());
+        System.out.println("Right list size: " + r.size());
+
+        if (!l.isEmpty()) {
+            double[][] matrix = new double[l.size()][];
+            matrix = l.toArray(matrix);
+            left = new Node(matrix);
+        }
         
-        this.datapoint = new Point(l.get(l.size()-1));
-        l.remove(l.get(l.size()-1));
-        left = new Node((double[][])l.toArray());
-        right = new Node((double[][])r.toArray());
+        if (!r.isEmpty()) {
+            double[][] matrix = new double[r.size()][];
+            matrix = r.toArray(matrix);
+            right = new Node(matrix);
+        }
+
     }
 }

@@ -1,6 +1,13 @@
 package Util;
 
 import KdTree.Point;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javafx.util.Pair;
 
 /**
  *
@@ -41,7 +48,25 @@ public class Util {
         return column;
     }
 
-    public static double median(double[] arr) {
+    public static Pair<Integer,Double> median(double[] arr) {
         return QuickSelect.quickSelect(arr, arr.length / 2, 0, arr.length - 1);
+    }
+
+    public static double[][] readCSV(String path, String separator) {
+        List<double[]> dataset = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+                dataset.add(Arrays.asList(line.split(separator)).stream().mapToDouble(Double::parseDouble).toArray());
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        double[][] matrix = new double[dataset.size()][];
+        matrix = dataset.toArray(matrix);
+        return matrix;
     }
 }

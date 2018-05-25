@@ -1,22 +1,23 @@
 package Util;
 
+import javafx.util.Pair;
+
 /**
  *
  * @author Marco
  */
 public class QuickSelect {
-    public static double quickSelect(double[] array, int pos, int left, int right) {
-        double[] arr = array.clone();
+    public static Pair<Integer,Double> quickSelect(double[] array, int pos, int left, int right) {
         if (left == right && left == pos) {
-            return arr[left];
+            return new Pair<>(left,array[left]);
         }
-        int posRes = partition(arr, left, right, pos);
+        int posRes = partition(array, left, right, pos);
         if (posRes == pos) {
-            return arr[posRes];
+            return new Pair<>(posRes,array[posRes]);
         } else if (posRes < pos) {
-            return quickSelect(arr, pos, posRes + 1, right);
+            return quickSelect(array, pos, posRes + 1, right);
         } else {
-            return quickSelect(arr, pos, left, posRes - 1);
+            return quickSelect(array, pos, left, posRes - 1);
         }
     }
 
