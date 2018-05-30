@@ -13,6 +13,10 @@ public class PrioQ {
     PriorityQueue<Pair<Double, Point>> queue;
     int size;
 
+    public PriorityQueue<Pair<Double, Point>> getQueue() {
+        return queue;
+    }
+
     public PrioQ(int size) {
         queue = new PriorityQueue<>(new TupleComparator());
 

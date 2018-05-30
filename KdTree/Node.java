@@ -11,19 +11,29 @@ import javafx.util.Pair;
  */
 public class Node {
 
-    double dataset[][];
-    Point datapoint;
-    Node left, right;
-    int keyIndex;
-    Pair<Integer, Double> median;
+    public Point datapoint;
+
+    public static final double lowerBounduary = 0.5;
+    public static final double upperBoundary = 1.5;
+    private static final int bucketSize = 8;
+
+    private double dataset[][];
+    private List<Point> bucket;
+    private Node left, right;
+    private int keyIndex;
+    private Pair<Integer, Double> median;
 
     static int nodeCount = 0;
 
     public Node(double[][] inputdata) {
         System.out.println(nodeCount++);
         dataset = inputdata;
-        if (inputdata.length == 1) {
+        if (inputdata.length == bucketSize) {
             datapoint = new Point(dataset[0]);
+            bucket = new ArrayList();
+            for (int i = 1; i < dataset.length; i++) {
+                bucket.add(new Point(dataset[i]));
+            }
         }
         //get highest variance feature index
         double highestVariance = 0;
@@ -39,14 +49,13 @@ public class Node {
         median = Util.median(Util.getColumn(dataset, keyIndex));
         datapoint = new Point(inputdata[median.getKey()]);
         System.out.println("Median: " + median.getValue());
-        //System.out.println(datapoint);
-
         //split list
         List<double[]> l = new ArrayList<>();
         List<double[]> r = new ArrayList<>();
         for (double[] dataset1 : dataset) {
-            if(dataset1 == datapoint.getArray())
+            if (dataset1 == datapoint.getArray()) {
                 continue;
+            }
             if (dataset1[keyIndex] < median.getValue()) {
                 l.add(dataset1);
             } else {
@@ -62,12 +71,26 @@ public class Node {
             matrix = l.toArray(matrix);
             left = new Node(matrix);
         }
-        
+
         if (!r.isEmpty()) {
             double[][] matrix = new double[r.size()][];
             matrix = r.toArray(matrix);
             right = new Node(matrix);
         }
+    }
+    
+    private boolean ballWithinBounds(Point query, PrioQ queue, double lowerBound, double upperBound, int k) {
+        for (int i = 0; i < k; ++i) {
+            queue.queue.poll();
+        }
+        Pair<Double, Point> currentKNN = queue.queue.poll();
+        double dist1 = Util.euclidianDistance(query, datapoint);
+        double dist2 = Util.euclidianDistance(query, currentKNN.getValue());
 
+        return dist1 < dist2;
+    }
+    
+    private boolean boundsOverlapBall(Point query, PrioQ queue, double lowerBound, double upperBound, int k){
+        return true;
     }
 }

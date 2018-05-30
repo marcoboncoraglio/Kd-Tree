@@ -1,6 +1,7 @@
 package Util;
 
 import KdTree.Point;
+import KdTree.PrioQ;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -48,7 +49,7 @@ public class Util {
         return column;
     }
 
-    public static Pair<Integer,Double> median(double[] arr) {
+    public static Pair<Integer, Double> median(double[] arr) {
         return QuickSelect.quickSelect(arr, arr.length / 2, 0, arr.length - 1);
     }
 
@@ -68,5 +69,10 @@ public class Util {
         double[][] matrix = new double[dataset.size()][];
         matrix = dataset.toArray(matrix);
         return matrix;
+    }
+
+    private boolean boundsOverlapBall(Point query, PrioQ queue, int k) {
+
+        return true;
     }
 }
