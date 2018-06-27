@@ -12,9 +12,6 @@ import javafx.util.Pair;
 public class Node {
 
     public Point datapoint;
-
-    public static final double lowerBounduary = 0.5;
-    public static final double upperBoundary = 1.5;
     private static final int bucketSize = 8;
 
     private double dataset[][];
@@ -26,7 +23,7 @@ public class Node {
     static int nodeCount = 0;
 
     public Node(double[][] inputdata) {
-        System.out.println(nodeCount++);
+        //System.out.println(nodeCount++);
         dataset = inputdata;
         if (inputdata.length == bucketSize) {
             datapoint = new Point(dataset[0]);
@@ -44,11 +41,10 @@ public class Node {
                 keyIndex = i;
             }
         }
-        //calculate median
-        System.out.println("Highest Variance index: " + keyIndex);
-        median = Util.median(Util.getColumn(dataset, keyIndex));
+
+        double[] column = Util.getColumn(dataset, keyIndex);
+        median = Util.median(column);
         datapoint = new Point(inputdata[median.getKey()]);
-        System.out.println("Median: " + median.getValue());
         //split list
         List<double[]> l = new ArrayList<>();
         List<double[]> r = new ArrayList<>();
@@ -63,9 +59,6 @@ public class Node {
             }
         }
 
-        System.out.println("Left list size: " + l.size());
-        System.out.println("Right list size: " + r.size());
-
         if (!l.isEmpty()) {
             double[][] matrix = new double[l.size()][];
             matrix = l.toArray(matrix);
@@ -79,18 +72,48 @@ public class Node {
         }
     }
     
-    private boolean ballWithinBounds(Point query, PrioQ queue, double lowerBound, double upperBound, int k) {
-        for (int i = 0; i < k; ++i) {
-            queue.queue.poll();
+    private void nearestNeighborSearch(Point query, PrioQ q, double[] lowBound, double[] highBound, int k){
+        if(left == null && right == null){
+            for(Point p: bucket){
+                double distance = Util.euclidianDistance(p, query);
+                if(q.queue.offer(new Pair<>(distance, p))){
+                    if(ballWithinBounds(query, q.queue.poll().getKey(), lowBound, highBound))
+                        return;
+                }
+            }
         }
-        Pair<Double, Point> currentKNN = queue.queue.poll();
-        double dist1 = Util.euclidianDistance(query, datapoint);
-        double dist2 = Util.euclidianDistance(query, currentKNN.getValue());
-
-        return dist1 < dist2;
+        if(query.features[keyIndex] <= median.getValue()){
+            
+        }
     }
-    
-    private boolean boundsOverlapBall(Point query, PrioQ queue, double lowerBound, double upperBound, int k){
+
+    private boolean ballWithinBounds(Point query, double kClosestDistance, double[] lowBound, double[] highBound) {
+        for (int i = 0; i < query.features.length; i++) {
+            if (Math.abs(query.features[i] - lowBound[i]) <= kClosestDistance) {
+                return false;
+            }
+            if (Math.abs(query.features[i] - highBound[i]) <= kClosestDistance) {
+                return false;
+            }
+        }
         return true;
+    }
+
+    private boolean boundsOverlapBall(Point query, double kClosestDistance, double[] lowBound, double[] highBound) {
+        double sum = 0;
+        for (int i = 0; i < query.features.length; i++) {
+            if (query.features[i] < lowBound[i]) {
+                sum += Math.abs(query.features[i] - lowBound[i]);
+                if (sum > kClosestDistance) {
+                    return true;
+                }
+            } else if (query.features[i] > highBound[i]) {
+                sum += Math.abs(query.features[i] - highBound[i]);
+                if (sum > kClosestDistance) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

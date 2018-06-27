@@ -50,7 +50,15 @@ public class Util {
     }
 
     public static Pair<Integer, Double> median(double[] arr) {
-        return QuickSelect.quickSelect(arr, arr.length / 2, 0, arr.length - 1);
+        return QuickSelect.quickSelectPair(arr, arr.length / 2, 0, arr.length - 1);
+    }
+
+    public static double highest(double[] arr) {
+        return QuickSelect.quickSelect(arr, arr.length - 1, 0, arr.length - 1);
+    }
+
+    public static double lowest(double[] arr) {
+        return QuickSelect.quickSelect(arr, 0, 0, arr.length - 1);
     }
 
     public static double[][] readCSV(String path, String separator) {

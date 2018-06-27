@@ -7,13 +7,28 @@ import javafx.util.Pair;
  * @author Marco
  */
 public class QuickSelect {
-    public static Pair<Integer,Double> quickSelect(double[] array, int pos, int left, int right) {
+
+    public static Pair<Integer, Double> quickSelectPair(double[] array, int pos, int left, int right) {
         if (left == right && left == pos) {
-            return new Pair<>(left,array[left]);
+            return new Pair<>(left, array[left]);
         }
         int posRes = partition(array, left, right, pos);
         if (posRes == pos) {
-            return new Pair<>(posRes,array[posRes]);
+            return new Pair<>(posRes, array[posRes]);
+        } else if (posRes < pos) {
+            return quickSelectPair(array, pos, posRes + 1, right);
+        } else {
+            return quickSelectPair(array, pos, left, posRes - 1);
+        }
+    }
+
+    public static double quickSelect(double[] array, int pos, int left, int right) {
+        if (left == right && left == pos) {
+            return array[left];
+        }
+        int posRes = partition(array, left, right, pos);
+        if (posRes == pos) {
+            return array[posRes];
         } else if (posRes < pos) {
             return quickSelect(array, pos, posRes + 1, right);
         } else {
